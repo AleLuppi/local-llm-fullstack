@@ -1,37 +1,12 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
+    <header-main
+      v-model:left-drawer-open="leftDrawerOpen"
       bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-      </q-list>
-    </q-drawer>
+      class="glass text-inherit"
+    />
+
+    <drawer-chat-history v-model="leftDrawerOpen" show-if-above bordered />
 
     <q-page-container>
       <router-view />
@@ -41,10 +16,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import HeaderMain from 'components/layout/HeaderMain.vue';
+import DrawerChatHistory from 'components/layout/DrawerChatHistory.vue';
 
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+// Drawer status
+const leftDrawerOpen = ref(false);
 </script>
