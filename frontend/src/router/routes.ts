@@ -1,17 +1,27 @@
 import { RouteRecordRaw } from 'vue-router';
 
+// Import layouts
+const MainLayout = () => import('layouts/MainLayout.vue');
+
+// Import pages
+const ChatPage = () => import('pages/ChatPage.vue');
+
+// List route names
+export enum PageName {
+  chat = 'chat',
+}
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    component: MainLayout,
+    children: [{ name: PageName.chat, path: '', component: ChatPage }],
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
+  // Unknown route
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    redirect: { name: PageName.chat, params: {} },
   },
 ];
 

@@ -1,30 +1,41 @@
 <template>
   <div>
     <p>{{ title }}</p>
-    <ul>
-      <li v-for="todo in todos" :key="todo.id" @click="increment">
+    <q-list>
+      <q-item v-for="todo in todos" :key="todo.id" clickable @click="increment">
         {{ todo.id }} - {{ todo.content }}
-      </li>
-    </ul>
+      </q-item>
+    </q-list>
+
     <p>Count: {{ todoCount }} / {{ meta.totalCount }}</p>
     <p>Active: {{ active ? 'yes' : 'no' }}</p>
     <p>Clicks on todos: {{ clickCount }}</p>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { Todo, Meta } from './models';
 
-interface Props {
-  title: string;
-  todos?: Todo[];
-  meta: Meta;
-  active: boolean;
+interface Todo {
+  id: number;
+  content: string;
 }
-const props = withDefaults(defineProps<Props>(), {
-  todos: () => [],
-});
+
+interface Meta {
+  totalCount: number;
+}
+
+const props = withDefaults(
+  defineProps<{
+    title: string;
+    todos?: Todo[];
+    meta: Meta;
+    active?: boolean;
+  }>(),
+  {
+    todos: () => [],
+  },
+);
 
 const clickCount = ref(0);
 function increment() {
@@ -33,5 +44,4 @@ function increment() {
 }
 
 const todoCount = computed(() => props.todos.length);
-
 </script>

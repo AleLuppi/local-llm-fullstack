@@ -1,7 +1,14 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
-  failed: 'Action failed',
-  success: 'Action was successful'
+  // Locale related
+  locale: {
+    name: 'English (United States)',
+  },
+
+  // LLM chat-related
+  chat: {
+    historyTitle: 'Your chat history',
+    messagePlaceholder: 'Your message...',
+    messageConfig: 'Message config',
+    messageMultiline: 'Multiline',
+  },
 };
