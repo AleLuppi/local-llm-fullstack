@@ -8,5 +8,7 @@ export default {
   chat: {
     historyTitle: 'Your chat history',
     messagePlaceholder: 'Your message...',
+    messageConfig: 'Message config',
+    messageMultiline: 'Multiline',
   },
 };

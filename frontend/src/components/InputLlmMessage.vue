@@ -20,7 +20,7 @@
         outlined
         :placeholder="$t('chat.messagePlaceholder')"
         class="input-chat col"
-        @keyup.enter="onSubmit"
+        @keydown.enter="multiLineMessage ? undefined : onSubmit()"
       />
       <div>
         <a-btn
@@ -35,16 +35,34 @@
     </div>
 
     <q-slide-transition v-if="!hideChatConfig">
-      <div v-show="showChatConfig" class="row q-px-lg">
-        <!-- TODO add chat config elements -->
+      <div v-show="showChatConfig">
+        <q-separator size="8px" color="transparent" />
+        <q-card
+          flat
+          bordered
+          class="row q-mx-auto"
+          style="border-radius: 8px; max-width: 80%"
+        >
+          <span class="col-12 q-pt-sm q-px-sm text-small">
+            {{ $t('chat.messageConfig') }}
+          </span>
+          <q-checkbox
+            v-model="multiLineMessage"
+            :label="$t('chat.messageMultiline')"
+            :checked-icon="fasAlignLeft"
+            :unchecked-icon="fasAlignLeft"
+            :class="{ 'text-grey': !multiLineMessage }"
+          />
+        </q-card>
       </div>
     </q-slide-transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import {
+  fasAlignLeft,
   fasAngleDown,
   fasAngleUp,
   fasTurnUp,
@@ -52,8 +70,8 @@ import {
 
 // Define props
 const props = defineProps<{
-  // clear model value on message submit
-  clearOnSubmit?: boolean;
+  // preserve model value on message submit
+  preserveOnSubmit?: boolean;
 
   // do not allow chat config
   hideChatConfig?: boolean;
@@ -70,12 +88,20 @@ const modelValue = defineModel<string>();
 // Whether to show helper buttons
 const showChatConfig = ref(false);
 
+// Whether message is multiline
+const multiLineMessage = ref(false);
+
+// Ensure model value does not include newlines if message is single line
+watch(modelValue, (val) => {
+  if (!multiLineMessage.value) modelValue.value = val?.replace(/\n/g, '');
+});
+
 /**
  * Submit chat message.
  */
 function onSubmit() {
   if (modelValue.value?.trim()) emit('submit', modelValue.value);
 
-  if (props.clearOnSubmit) modelValue.value = '';
+  if (!props.preserveOnSubmit) modelValue.value = '';
 }
 </script>

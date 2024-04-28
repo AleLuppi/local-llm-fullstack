@@ -11,7 +11,7 @@
           <q-avatar color="primary" icon="person" size="sm" />
         </q-item-section>
 
-        <q-item-label style="font-size: 1.1em">
+        <q-item-label style="white-space: pre; font-size: 1.1em">
           {{ message }}
         </q-item-label>
       </q-item>
