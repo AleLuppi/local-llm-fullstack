@@ -1,0 +1,16 @@
+/* Base glass effect */
+.glass {
+  backdrop-filter: blur(6px) saturate(90%);
+  -webkit-backdrop-filter: blur(6px) saturate(90%);
+  background-color: unset;
+}
+
+.glass-white {
+  @extend .glass;
+  background: rgba(white, 0.3);
+}
+
+.glass-black {
+  @extend .glass;
+  background: rgba(black, 0.2);
+}

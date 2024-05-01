@@ -1,1 +1,23 @@
 // app global css in SCSS form
+
+/****************/
+/***** TEXT *****/
+/****************/
+
+.text-x-small {
+  font-size: x-small;
+}
+
+.text-small {
+  font-size: small;
+}
+
+.text-large {
+  font-size: large;
+}
+
+.text-inherit {
+  color: inherit;
+}
+
+@import './quasar.overrides.scss';
