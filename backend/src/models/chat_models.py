@@ -7,10 +7,10 @@ if TYPE_CHECKING:
 
 
 class ChatMessage:
-    def __init__(self, role: 'ChatRole', content: str, datetime: datetime_lib = datetime_lib.now()):
+    def __init__(self, role: 'ChatRole', content: str, datetime: datetime_lib = None):
         self._role = role
         self._content = content
-        self._datetime = datetime
+        self._datetime = datetime if datetime is not None else datetime_lib.now()
 
     @property
     def role(self):
@@ -28,15 +28,18 @@ class ChatMessage:
         return {
             "role": self._role,
             "content": self._content,
-            "datetime": self._datetime
+            "datetime": self._datetime.isoformat(),
         }
 
 
 class Chat:
-    def __init__(self, messages: list['ChatMessage'], uid: str = None, summary: str = None):
-        self._id = uid if uid is not None else str(uuid4())
+    def __init__(self, messages: list['ChatMessage'], uid: str | int = None, summary: str = None,
+                 creation_datetime: datetime_lib = None):
+        self._id = uid if uid is not None else uuid4().int
         self._messages = messages
         self._summary = summary
+        self._creation_datetime = creation_datetime if creation_datetime is not None else datetime_lib.now()
+
 
     @property
     def id(self):
@@ -51,12 +54,16 @@ class Chat:
         return self._summary
 
     @property
+    def creation_datetime(self):
+        return self._creation_datetime
+
+    @property
     def last_message(self):
         return self.messages[-1] if len(self.messages) > 0 else None
 
     @property
     def last_update(self):
-        return self.last_message.datetime
+        return self.last_message.datetime if self.last_message is not None else self.creation_datetime
 
     def add_message(self, message: 'ChatMessage'):
         self._messages.append(message)
@@ -66,8 +73,10 @@ class Chat:
             "id": self._id,
             "messages": [message.to_dict() for message in self._messages],
             "summary": self._summary,
+            "creation_datetime": self._creation_datetime.isoformat(),
         }
 
     @classmethod
     def from_dict(cls, param):
-        return cls([ChatMessage(**message) for message in param["messages"]], param["id"], param["summary"])
+        return cls([ChatMessage(**message) for message in param["messages"]], uid=param["id"],
+                   summary=param["summary"], creation_datetime=param["creation_datetime"])

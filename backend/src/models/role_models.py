@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ChatRole(Enum):
+class ChatRole(str, Enum):
     USER = "user"
     ASSISTANT = "assistant"
     SYSTEM = "system"
