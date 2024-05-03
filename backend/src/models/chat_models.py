@@ -1,4 +1,4 @@
-from datetime import datetime as datetime_lib
+from datetime import datetime as datetime_cls
 from typing import TYPE_CHECKING
 from uuid import uuid4
 
@@ -7,10 +7,10 @@ if TYPE_CHECKING:
 
 
 class ChatMessage:
-    def __init__(self, role: 'ChatRole', content: str, datetime: datetime_lib = None):
+    def __init__(self, role: 'ChatRole', content: str, datetime: datetime_cls | str = None):
         self._role = role
         self._content = content
-        self._datetime = datetime if datetime is not None else datetime_lib.now()
+        self.datetime = datetime if datetime is not None else datetime_cls.now()
 
     @property
     def role(self):
@@ -24,6 +24,10 @@ class ChatMessage:
     def datetime(self):
         return self._datetime
 
+    @datetime.setter
+    def datetime(self, value: datetime_cls | str):
+        self._datetime = datetime_cls.fromisoformat(value) if isinstance(value, str) else value
+
     def to_dict(self):
         return {
             "role": self._role,
@@ -34,11 +38,11 @@ class ChatMessage:
 
 class Chat:
     def __init__(self, messages: list['ChatMessage'], uid: str | int = None, summary: str = None,
-                 creation_datetime: datetime_lib = None):
+                 creation_datetime: datetime_cls | str = None):
         self._id = uid if uid is not None else uuid4().int
         self._messages = messages
         self._summary = summary
-        self._creation_datetime = creation_datetime if creation_datetime is not None else datetime_lib.now()
+        self.creation_datetime = creation_datetime if creation_datetime is not None else datetime_cls.now()
 
 
     @property
@@ -56,6 +60,10 @@ class Chat:
     @property
     def creation_datetime(self):
         return self._creation_datetime
+
+    @creation_datetime.setter
+    def creation_datetime(self, value: datetime_cls | str):
+        self._creation_datetime = datetime_cls.fromisoformat(value) if isinstance(value, str) else value
 
     @property
     def last_message(self):

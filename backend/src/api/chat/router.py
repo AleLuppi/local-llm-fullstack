@@ -35,6 +35,21 @@ def get_chat(chat_id: str):
     return load_chat(chat_id)
 
 
+@router.put("/{chat_id}", status_code=status.HTTP_200_OK)
+def append_chat(chat_id: str, message: str):
+    """
+    Append a message to the selected chat.
+
+    :param chat_id: ID of the chat to append to
+    :param message: chat message to store.
+    :return: chat associated to selected chat ID.
+    """
+    # Save chat message to selected chat
+    # NOTE: chat messages stored via API will be saved with USER role
+    chat = save_user_message(chat_id, message)
+    return chat.to_dict() if chat is not None else None
+
+
 @router.put("/new", status_code=status.HTTP_200_OK)
 def create_chat(message: str | None = None):
     """
