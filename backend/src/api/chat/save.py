@@ -6,6 +6,7 @@ API methods to locally store chat messages.
 from database.write import write_chat, append_to_chat
 from models import ChatRole, Chat
 from .load import resolve_chat
+from .query import chat_agent
 
 
 def save_new_chat(chat: Chat | None = None) -> Chat:
@@ -44,7 +45,7 @@ def save_agent_message(chat: Chat, message: str | None = None) -> Chat:
     """
     # Optionally create the agent message
     if message is None:
-        message = ""
+        message = chat_agent(chat)
 
     # Append message to chat
     append_to_chat(chat, message, ChatRole.AGENT)
