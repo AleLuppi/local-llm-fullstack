@@ -14,4 +14,4 @@ def resolve(*paths: str):
     return abspath(path_join(__DIR_NAME, *paths))
 
 
-LLM_MODEL_MISTRAL_7B = resolve("mistral-7b-openorca.gguf2.Q4_0.gguf")
+LLM_MODEL_MISTRAL_7B = resolve("models", "mistral-7b-openorca.gguf2.Q4_0.gguf")
