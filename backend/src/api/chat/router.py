@@ -6,8 +6,8 @@ Set API routes for chat management.
 
 from fastapi import APIRouter, status
 
-from .load import load_history, load_chat
-from .save import save_user_message
+from .load import load_history, load_chat, resolve_chat
+from .save import save_user_message, save_new_chat, save_agent_message
 
 # Init router
 router = APIRouter()
@@ -24,7 +24,7 @@ def get_chats(limit: int = None):
     return load_history(limit=limit)
 
 
-@router.get("/{chat_id}", status_code=status.HTTP_200_OK)
+@router.get("/id/{chat_id}", status_code=status.HTTP_200_OK)
 def get_chat(chat_id: str):
     """
     Retrieve chat messages by ID.
@@ -35,31 +35,48 @@ def get_chat(chat_id: str):
     return load_chat(chat_id)
 
 
-@router.put("/{chat_id}", status_code=status.HTTP_200_OK)
-def append_chat(chat_id: str, message: str):
+@router.put("/id/{chat_id}", status_code=status.HTTP_200_OK)
+def append_chat(chat_id: str, message: str, skip_gen: bool = False):
     """
     Append a message to the selected chat.
 
     :param chat_id: ID of the chat to append to
     :param message: chat message to store.
+    :param skip_gen: flag to skip llm answer generation.
     :return: chat associated to selected chat ID.
     """
+    # Retrieve chat
+    chat = resolve_chat(chat_id)
+
     # Save chat message to selected chat
-    # NOTE: chat messages stored via API will be saved with USER role
-    chat = save_user_message(chat_id, message)
+    if chat is not None:
+        # NOTE: chat messages stored via API will be saved with USER role
+        chat = save_user_message(chat, message)
+
+        if not skip_gen:
+            chat = save_agent_message(chat)
+
     return chat.to_dict() if chat is not None else None
 
 
 @router.put("/new", status_code=status.HTTP_200_OK)
-def create_chat(message: str | None = None):
+def create_chat(message: str | None = None, skip_gen: bool = False):
     """
     Append a message to the selected chat.
 
     :param message: optional chat message to start the chat with.
+    :param skip_gen: flag to skip llm answer generation.
     :return: chat associated to selected chat ID.
     """
-    # Save chat message into a new chat
-    # NOTE: chat messages stored via API will be saved with USER role
-    chat = save_user_message(None, message)
-    return chat.to_dict() if chat is not None else None
+    # Create a new chat
+    chat = save_new_chat()
 
+    # Save chat message into a new chat
+    if message is not None:
+        # NOTE: chat messages stored via API will be saved with USER role
+        chat = save_user_message(chat, message)
+
+        if not skip_gen:
+            chat = save_agent_message(chat)
+
+    return chat.to_dict() if chat is not None else None

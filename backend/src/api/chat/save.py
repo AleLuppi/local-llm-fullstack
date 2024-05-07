@@ -3,30 +3,49 @@ File: save.py
 
 API methods to locally store chat messages.
 """
-from database.read import read_chat
 from database.write import write_chat, append_to_chat
 from models import ChatRole, Chat
+from .load import resolve_chat
 
 
-def save_user_message(chat_id: str | None, message: str | None):
+def save_new_chat(chat: Chat | None = None) -> Chat:
+    """
+    Save a new chat.
+
+    :param chat: optional chat to save, a new one will be created if not provided.
+    :return: updated chat.
+    """
+    if chat is None:
+        chat = resolve_chat()
+    write_chat(chat)
+    return chat
+
+
+def save_user_message(chat: Chat, message: str) -> Chat:
     """
     Append a user message to the selected chat.
 
-    :param chat_id: ID of the chat to append to.
+    :param chat: chat to append message to.
     :param message: chat message to store.
-    :return: chat associated to selected chat ID.
+    :return: updated chat with user message.
     """
-    # Create new chat if needed
-    if chat_id is None:
-        chat = Chat([])
-    # Else retrieve existing chat
-    else:
-        chat = read_chat(chat_id)
+    # Append message to chat
+    append_to_chat(chat, message, ChatRole.USER)
+    return chat
+
+
+def save_agent_message(chat: Chat, message: str | None = None) -> Chat:
+    """
+    Append an agent message to the selected chat.
+
+    :param chat: chat to append message to.
+    :param message: optional chat message to store, otherwise a new answer will be generated.
+    :return: updated chat with user message.
+    """
+    # Optionally create the agent message
+    if message is None:
+        message = ""
 
     # Append message to chat
-    if chat is not None:
-        if message is None:
-            write_chat(chat)
-        else:
-            append_to_chat(chat, message, ChatRole.USER)
+    append_to_chat(chat, message, ChatRole.AGENT)
     return chat

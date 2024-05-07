@@ -3,6 +3,6 @@ from enum import Enum
 
 class ChatRole(str, Enum):
     USER = "user"
-    ASSISTANT = "assistant"
+    AGENT = "agent"
     SYSTEM = "system"
     FUNCTION = "function"

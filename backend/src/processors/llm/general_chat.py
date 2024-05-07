@@ -19,7 +19,7 @@ prompt = ChatPromptTemplate.from_messages([
 llm_chain = prompt | llm_model
 
 
-def query_llm(query):
+def query_llm(query: str) -> str:
     """
     Query LLM as User with a single message.
 
@@ -31,7 +31,7 @@ def query_llm(query):
     ]})
 
 
-def chat_llm(chat: Chat | str):
+def chat_llm(chat: Chat | str) -> str:
     """
     Chat with LLM with multiple messages.
 
@@ -45,9 +45,9 @@ def chat_llm(chat: Chat | str):
     # Translate chat into messages to pass to LLM
     messages = [
         (HumanMessage if message.role == ChatRole.USER else
-         AIMessage if message.role == ChatRole.ASSISTANT else
+         AIMessage if message.role == ChatRole.AGENT else
          SystemMessage)(content=message.content) for message in chat.messages
-        if message.role in [ChatRole.USER, ChatRole.ASSISTANT, ChatRole.SYSTEM]
+        if message.role in [ChatRole.USER, ChatRole.AGENT, ChatRole.SYSTEM]
     ]
 
     # Chat history case
