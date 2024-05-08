@@ -1,7 +1,7 @@
 <template>
   <q-page class="column">
     <!-- Display current chat history -->
-    <q-list class="col q-px-lg q-py-md">
+    <q-list class="col q-px-lg q-py-md full-width">
       <q-item
         v-for="(message, idx) in chatHistory"
         :key="idx"
@@ -11,7 +11,7 @@
           <q-avatar color="primary" icon="person" size="sm" />
         </q-item-section>
 
-        <q-item-label style="white-space: pre; font-size: 1.1em">
+        <q-item-label class="text-pre-wrap-break col" style="font-size: 1.1em">
           {{ message }}
         </q-item-label>
       </q-item>

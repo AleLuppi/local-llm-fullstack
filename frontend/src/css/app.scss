@@ -20,4 +20,9 @@
   color: inherit;
 }
 
+.text-pre-wrap-break {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 @import './quasar.overrides.scss';
