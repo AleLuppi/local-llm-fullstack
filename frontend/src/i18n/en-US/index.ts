@@ -10,5 +10,6 @@ export default {
     messagePlaceholder: 'Your message...',
     messageConfig: 'Message config',
     messageMultiline: 'Multiline',
+    messageWaitingAgent: "I'm thinking",
   },
 };

@@ -3,7 +3,7 @@
     <!-- Display current chat history -->
     <q-list class="col q-px-lg q-py-md full-width">
       <q-item
-        v-for="(message, idx) in chatHistory"
+        v-for="(message, idx) in allChatMessages"
         :key="idx"
         class="items-start"
       >
@@ -19,21 +19,28 @@
 
     <!-- Display chat input -->
     <div class="chat-elements q-px-md">
-      <input-llm-message v-model="chatMessage" @submit="chatSubmit" />
+      <input-agent-message v-model="chatMessage" @submit="chatSubmit" />
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
-import { useLlmChat } from 'src/composables/llmChat';
+import { useAgentChat } from 'src/composables/agentChat';
 
 // Import components
-const InputLlmMessage = defineAsyncComponent(
-  () => import('src/components/InputLlmMessage.vue'),
+const InputAgentMessage = defineAsyncComponent(
+  () => import('src/components/InputAgentMessage.vue'),
 );
 
-const { chatMessage, chatHistory, submit: chatSubmit } = useLlmChat();
+// Get refs
+const {
+  chatMessage,
+  allChatMessages,
+  isLoading: waitingAgent,
+  loadingMessage,
+  submit: chatSubmit,
+} = useAgentChat();
 </script>
 
 <style scoped lang="scss">
