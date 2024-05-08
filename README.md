@@ -20,4 +20,5 @@ Build and chat with a local (private) LLM. Or just use this as a starting point 
 - [**LangChain**](https://www.langchain.com/) to ease LLM querying.
 - [**FastAPI**](https://fastapi.tiangolo.com/) to prepare a simple REST API.
   - with [**Uvicorn**](https://www.uvicorn.org/) as ASGI web server
+- [**TinyDB**](https://tinydb.readthedocs.io/) as basic local document-oriented DB.
 - [**PyInstaller**](https://pyinstaller.org/) to bundle Python application.
