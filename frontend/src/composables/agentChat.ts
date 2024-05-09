@@ -21,8 +21,8 @@ export function useAgentChat() {
   const isError = ref(false);
 
   // Current chat history of messages
-  const allChatMessages = computed<string[]>(
-    () => chatReference.value?.messages.map((message) => message.content) ?? [],
+  const allChatMessages = computed<ChatMessage[]>(
+    () => chatReference.value?.messages ?? [],
   );
 
   /**
