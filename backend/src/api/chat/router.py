@@ -35,7 +35,7 @@ def get_chat(chat_id: str):
     return load_chat(chat_id)
 
 
-@router.put("/id/{chat_id}", status_code=status.HTTP_200_OK)
+@router.post("/id/{chat_id}", status_code=status.HTTP_200_OK)
 def append_chat(chat_id: str, message: str, skip_gen: bool = False):
     """
     Append a message to the selected chat.
@@ -59,7 +59,7 @@ def append_chat(chat_id: str, message: str, skip_gen: bool = False):
     return chat.to_dict() if chat is not None else None
 
 
-@router.put("/new", status_code=status.HTTP_200_OK)
+@router.post("/new", status_code=status.HTTP_200_OK)
 def create_chat(message: str | None = None, skip_gen: bool = False):
     """
     Append a message to the selected chat.

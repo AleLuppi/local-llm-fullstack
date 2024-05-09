@@ -30,7 +30,7 @@ function apiDataToChat(data: Omit<ChatProps, 'uid'> & { id: string }): Chat {
  */
 function createChat(message?: string): Promise<Chat> {
   return apiAgent
-    .put('/chat/new', null, { params: { message } })
+    .post('/chat/new', null, { params: { message } })
     .then((response) => apiDataToChat(response.data));
 }
 
@@ -43,7 +43,7 @@ function createChat(message?: string): Promise<Chat> {
  */
 function updateChat(chat: Chat, message: string): Promise<Chat> {
   return apiAgent
-    .put(`/chat/id/${chat.uid}`, null, { params: { message } })
+    .post(`/chat/id/${chat.uid}`, null, { params: { message } })
     .then((response) => apiDataToChat(response.data));
 }
 
