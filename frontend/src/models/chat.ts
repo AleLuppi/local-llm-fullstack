@@ -8,7 +8,7 @@ export { ChatRole };
 export class ChatMessage implements ChatMessageProps {
   role: ChatRole;
   content: string;
-  date: Date;
+  date?: Date;
 
   constructor(props: ChatMessageProps) {
     this.role = props.role as ChatRole;
@@ -20,8 +20,8 @@ export class ChatMessage implements ChatMessageProps {
 export class Chat implements ChatProps {
   uid: string;
   messages: ChatMessageProps[];
-  summary: string | undefined;
-  creationDate: Date;
+  summary?: string | undefined;
+  creationDate?: Date;
 
   constructor(props: ChatProps) {
     this.uid = props.uid;
