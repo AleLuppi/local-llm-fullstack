@@ -9,7 +9,7 @@
     />
 
     <!-- Display chat input -->
-    <div class="chat-elements q-px-md">
+    <div class="chat-elements q-px-md q-pb-md q-pt-sm glass">
       <input-agent-message v-model="chatMessage" @submit="chatSubmit" />
     </div>
   </q-page>
@@ -40,7 +40,7 @@ const {
 <style scoped lang="scss">
 .chat-elements {
   position: sticky;
-  bottom: 10px;
+  bottom: 0;
 }
 
 .input-chat:deep(textarea) {
