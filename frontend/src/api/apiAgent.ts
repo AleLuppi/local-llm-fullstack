@@ -26,11 +26,12 @@ function apiDataToChat(data: Omit<ChatProps, 'uid'> & { id: string }): Chat {
  * Create new chat with optional message.
  *
  * @param {string} message - Optional message to override chat model value.
+ * @param {boolean} reply - Whether to request a reply from agent.
  * @returns {Promise<ChatInterface>} Current chat.
  */
-function createChat(message?: string): Promise<Chat> {
+function createChat(message?: string, reply?: boolean): Promise<Chat> {
   return apiAgent
-    .post('/chat/new', null, { params: { message } })
+    .post('/chat/new', null, { params: { message, reply } })
     .then((response) => apiDataToChat(response.data));
 }
 
@@ -39,11 +40,16 @@ function createChat(message?: string): Promise<Chat> {
  *
  * @param {ChatInterface} chat - Current chat.
  * @param {string} message - New user message.
+ * @param {boolean} reply - Whether to request a reply from agent.
  * @returns {Promise<ChatInterface>} Updated chat.
  */
-function updateChat(chat: Chat, message: string): Promise<Chat> {
+function updateChat(
+  chat: Chat,
+  message: string,
+  reply?: boolean,
+): Promise<Chat> {
   return apiAgent
-    .post(`/chat/id/${chat.uid}`, null, { params: { message } })
+    .post(`/chat/id/${chat.uid}`, null, { params: { message, reply } })
     .then((response) => apiDataToChat(response.data));
 }
 
@@ -58,7 +64,7 @@ export function requestAgentAnswer(
   chat: Chat | undefined,
   message?: string,
 ): Promise<Chat> {
-  if (!chat) return createChat(message);
-  else if (message !== undefined) return updateChat(chat, message);
+  if (!chat) return createChat(message, true);
+  else if (message !== undefined) return updateChat(chat, message, true);
   else return Promise.resolve(chat);
 }
