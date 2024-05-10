@@ -7,13 +7,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.utils import router as router_utils
 from api.chat import router as router_chat
+from config import config
 
 # Init app
 app = FastAPI()
 
 # Setup origins
 origins = [
-    "http://localhost:48314",
+    f"http://localhost:{config['APP_API_PORT']}",
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:9000",

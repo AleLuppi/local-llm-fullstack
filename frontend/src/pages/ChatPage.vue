@@ -1,45 +1,46 @@
 <template>
   <q-page class="column">
     <!-- Display current chat history -->
-    <q-list class="col q-px-lg q-py-md">
-      <q-item
-        v-for="(message, idx) in chatHistory"
-        :key="idx"
-        class="items-start"
-      >
-        <q-item-section avatar>
-          <q-avatar color="primary" icon="person" size="sm" />
-        </q-item-section>
-
-        <q-item-label style="white-space: pre; font-size: 1.1em">
-          {{ message }}
-        </q-item-label>
-      </q-item>
-    </q-list>
+    <list-chat-messages
+      :messages="allChatMessages"
+      :waiting="waitingAgent"
+      :waiting-message="waitingAgentMessage"
+      class="col q-px-lg q-py-md"
+    />
 
     <!-- Display chat input -->
-    <div class="chat-elements q-px-md">
-      <input-llm-message v-model="chatMessage" @submit="chatSubmit" />
+    <div class="chat-elements q-px-md q-pb-md q-pt-sm glass">
+      <input-agent-message v-model="chatMessage" @submit="chatSubmit" />
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
-import { useLlmChat } from 'src/composables/llmChat';
+import { useAgentChat } from 'src/composables/agentChat';
 
 // Import components
-const InputLlmMessage = defineAsyncComponent(
-  () => import('src/components/InputLlmMessage.vue'),
+const ListChatMessages = defineAsyncComponent(
+  () => import('src/components/ListChatMessages.vue'),
+);
+const InputAgentMessage = defineAsyncComponent(
+  () => import('src/components/InputAgentMessage.vue'),
 );
 
-const { chatMessage, chatHistory, submit: chatSubmit } = useLlmChat();
+// Get refs
+const {
+  chatMessage,
+  allChatMessages,
+  isLoading: waitingAgent,
+  loadingMessage: waitingAgentMessage,
+  submit: chatSubmit,
+} = useAgentChat();
 </script>
 
 <style scoped lang="scss">
 .chat-elements {
   position: sticky;
-  bottom: 10px;
+  bottom: 0;
 }
 
 .input-chat:deep(textarea) {

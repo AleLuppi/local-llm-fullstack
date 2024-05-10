@@ -39,7 +39,7 @@ class ChatMessage:
 class Chat:
     def __init__(self, messages: list['ChatMessage'], uid: str | int = None, summary: str = None,
                  creation_datetime: datetime_cls | str = None):
-        self._id = uid if uid is not None else uuid4().int
+        self._id = int(uid) if uid is not None else uuid4().int
         self._messages = messages
         self._summary = summary
         self.creation_datetime = creation_datetime if creation_datetime is not None else datetime_cls.now()
@@ -78,7 +78,7 @@ class Chat:
 
     def to_dict(self):
         return {
-            "id": self._id,
+            "id": str(self._id),
             "messages": [message.to_dict() for message in self._messages],
             "summary": self._summary,
             "creation_datetime": self._creation_datetime.isoformat(),

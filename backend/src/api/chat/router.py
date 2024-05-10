@@ -35,14 +35,14 @@ def get_chat(chat_id: str):
     return load_chat(chat_id)
 
 
-@router.put("/id/{chat_id}", status_code=status.HTTP_200_OK)
-def append_chat(chat_id: str, message: str, skip_gen: bool = False):
+@router.post("/id/{chat_id}", status_code=status.HTTP_200_OK)
+def append_chat(chat_id: str, message: str, reply: bool = False):
     """
     Append a message to the selected chat.
 
     :param chat_id: ID of the chat to append to
     :param message: chat message to store.
-    :param skip_gen: flag to skip llm answer generation.
+    :param reply: flag to ask for llm answer generation.
     :return: chat associated to selected chat ID.
     """
     # Retrieve chat
@@ -53,19 +53,19 @@ def append_chat(chat_id: str, message: str, skip_gen: bool = False):
         # NOTE: chat messages stored via API will be saved with USER role
         chat = save_user_message(chat, message)
 
-        if not skip_gen:
+        if reply:
             chat = save_agent_message(chat)
 
     return chat.to_dict() if chat is not None else None
 
 
-@router.put("/new", status_code=status.HTTP_200_OK)
-def create_chat(message: str | None = None, skip_gen: bool = False):
+@router.post("/new", status_code=status.HTTP_200_OK)
+def create_chat(message: str | None = None, reply: bool = False):
     """
     Append a message to the selected chat.
 
     :param message: optional chat message to start the chat with.
-    :param skip_gen: flag to skip llm answer generation.
+    :param reply: flag to ask for llm answer generation.
     :return: chat associated to selected chat ID.
     """
     # Create a new chat
@@ -76,7 +76,7 @@ def create_chat(message: str | None = None, skip_gen: bool = False):
         # NOTE: chat messages stored via API will be saved with USER role
         chat = save_user_message(chat, message)
 
-        if not skip_gen:
+        if reply:
             chat = save_agent_message(chat)
 
     return chat.to_dict() if chat is not None else None

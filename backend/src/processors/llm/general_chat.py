@@ -1,9 +1,11 @@
 from langchain_community.llms import GPT4All
-from langchain_core.messages import SystemMessage, AIMessage, HumanMessage
+from langchain_core.messages import BaseMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from assets import LLM_MODEL_MISTRAL_7B
 from models import Chat, ChatRole
+from .__prompts import prompt_common_qa
+from .__messages import SystemMessage, HumanMessage, AIMessage
 
 
 # Init model
@@ -11,12 +13,23 @@ llm_model = GPT4All(model=LLM_MODEL_MISTRAL_7B)
 
 # Init prompt
 prompt = ChatPromptTemplate.from_messages([
-    SystemMessage(content="You are a helpful assistant."),
+    SystemMessage(content=prompt_common_qa),
     MessagesPlaceholder(variable_name="messages"),
+    AIMessage(content=""),
 ])
 
 # Create chain
 llm_chain = prompt | llm_model
+
+
+def __invoke_llm(messages: [BaseMessage]) -> str:
+    """
+    Invoke LLM with messages.
+
+    :param messages: messages to pass to LLM.
+    :return: LLM response.
+    """
+    return str(llm_chain.invoke({"messages": messages})).strip()
 
 
 def query_llm(query: str) -> str:
@@ -26,9 +39,9 @@ def query_llm(query: str) -> str:
     :param query: query to pass to LLM.
     :return: LLM response.
     """
-    return llm_chain.invoke({"messages": [
+    return __invoke_llm([
         HumanMessage(content=query),
-    ]})
+    ])
 
 
 def chat_llm(chat: Chat | str) -> str:
@@ -51,4 +64,4 @@ def chat_llm(chat: Chat | str) -> str:
     ]
 
     # Chat history case
-    return llm_chain.invoke({"messages": messages})
+    return __invoke_llm(messages)

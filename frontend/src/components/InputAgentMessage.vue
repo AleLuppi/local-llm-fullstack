@@ -20,6 +20,7 @@
         outlined
         :placeholder="$t('chat.messagePlaceholder')"
         class="input-chat col"
+        :bg-color="$q.dark.isActive ? 'dark' : 'white'"
         @keydown.enter="multiLineMessage ? undefined : onSubmit()"
       />
       <div>
