@@ -35,7 +35,6 @@ if (pythonPath == undefined) {
   // If not found yet, search in current folder
   if (pythonPath == undefined)
     fs.readdirSync('.', { recursive: true }).some((file) => {
-      console.log(file);
       if (path.basename(file) == 'python.exe') pythonPath = file;
       return pythonPath != undefined;
     });
@@ -49,7 +48,7 @@ const child = spawn(pythonPath, ['src/main.py']);
 
 // Connect stdout and stderr to console
 child.stdout.on('data', (chunk) => console.log(`${chunk}`));
-child.stderr.on('data', (chunk) => console.log(`${chunk}`));
+child.stderr.on('data', (chunk) => console.error(`${chunk}`));
 
 // Handle server process exit
 child.on('close', (code) => {
