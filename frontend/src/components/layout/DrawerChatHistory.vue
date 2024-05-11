@@ -1,12 +1,13 @@
 <template>
   <q-drawer v-bind="$props" v-model="modelValue">
     <div class="column justify-between full-height">
-      <q-scroll-area class="col">
-        <list-chat-history
-          :chats="dateSortedChats"
-          :title="$t('chat.history.title')"
-        />
-      </q-scroll-area>
+      <list-chat-history
+        :chats="dateSortedChats"
+        :title="$t('chat.history.title')"
+        open-chat
+        new-chat
+        class="col q-pa-md"
+      />
 
       <div class="row justify-between q-pa-sm">
         <a-btn-dark size="sm" outline outline-color="grey" />

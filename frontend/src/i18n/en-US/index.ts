@@ -9,6 +9,7 @@ export default {
     history: {
       title: 'Your chat history',
       chatFromDate: 'Chat from ',
+      newChat: 'Start new chat',
     },
     message: {
       placeholder: 'Your message...',
