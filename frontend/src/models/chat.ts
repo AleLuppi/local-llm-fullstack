@@ -23,6 +23,17 @@ export class Chat implements ChatProps {
   summary?: string | undefined;
   creationDate?: Date;
 
+  get lastMessage(): ChatMessage | undefined {
+    return [...this.messages].sort(
+      (a, b) =>
+        (b.date ?? new Date(0)).getTime() - (a.date ?? new Date(0)).getTime(),
+    )[this.messages.length - 1];
+  }
+
+  get lastUpdate() {
+    return this.lastMessage?.date ?? this.creationDate ?? new Date(0);
+  }
+
   constructor(props: ChatProps) {
     this.uid = props.uid;
     this.messages = props.messages.map((message) => new ChatMessage(message));

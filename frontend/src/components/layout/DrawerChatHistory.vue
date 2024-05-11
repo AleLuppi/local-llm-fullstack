@@ -2,9 +2,10 @@
   <q-drawer v-bind="$props" v-model="modelValue">
     <div class="column justify-between full-height">
       <q-scroll-area class="col">
-        <q-list>
-          <q-item-label header> {{ $t('chat.history.title') }} </q-item-label>
-        </q-list>
+        <list-chat-history
+          :chats="dateSortedChats"
+          :title="$t('chat.history.title')"
+        />
       </q-scroll-area>
 
       <div class="row justify-between q-pa-sm">
@@ -22,7 +23,15 @@
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent, onMounted } from 'vue';
 import { type QDrawerProps, QDrawer } from 'quasar';
+import { storeToRefs } from 'pinia';
+import { useChatHistoryStore } from 'src/stores/chatHistoryStore';
+
+// Import components
+const ListChatHistory = defineAsyncComponent(
+  () => import('src/components/ListChatHistory.vue'),
+);
 
 // Define props
 withDefaults(defineProps<QDrawerProps>(), { dark: undefined });
@@ -31,4 +40,11 @@ withDefaults(defineProps<QDrawerProps>(), { dark: undefined });
 const modelValue = defineModel<QDrawerProps['modelValue']>({
   default: undefined,
 });
+
+// Retrieve chat history
+const chatHistoryStore = useChatHistoryStore();
+const { dateSortedChats } = storeToRefs(chatHistoryStore);
+
+// Load chat history on mount
+onMounted(chatHistoryStore.loadChats);
 </script>

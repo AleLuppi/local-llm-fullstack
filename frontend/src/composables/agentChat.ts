@@ -2,6 +2,7 @@ import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { requestAgentAnswer } from 'src/api/apiAgent';
 import { Chat, ChatMessage, ChatRole } from 'src/models/chat';
+import { useChatHistoryStore } from 'src/stores/chatHistoryStore';
 
 export function useAgentChat() {
   // Init plugin
@@ -25,6 +26,9 @@ export function useAgentChat() {
     () => chatReference.value?.messages ?? [],
   );
 
+  // Get method to update chat history
+  const { updateChat } = useChatHistoryStore();
+
   /**
    * Submit message and send it to LLM.
    *
@@ -42,6 +46,7 @@ export function useAgentChat() {
     requestAgentAnswer(chatReference.value, text)
       .then((response) => {
         chatReference.value = response;
+        updateChat(response);
       })
       .catch(() => (isError.value = true))
       .finally(() => {
