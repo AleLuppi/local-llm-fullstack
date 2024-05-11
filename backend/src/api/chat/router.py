@@ -21,7 +21,7 @@ def get_chats(limit: int = None):
     :param limit: maximum number of messages to retrieve.
     :return: list of all chat messages.
     """
-    return load_history(limit=limit)
+    return [chat.to_dict() for chat in load_history(limit=limit)]
 
 
 @router.get("/id/{chat_id}", status_code=status.HTTP_200_OK)
@@ -32,7 +32,8 @@ def get_chat(chat_id: str):
     :param chat_id: ID of the chat to retrieve
     :return: list of chat messages associated to selected chat ID.
     """
-    return load_chat(chat_id)
+    chat = load_chat(chat_id)
+    return chat.to_dict() if chat is not None else None
 
 
 @router.post("/id/{chat_id}", status_code=status.HTTP_200_OK)
