@@ -63,7 +63,7 @@ export function useAgentChat() {
   let interval: ReturnType<typeof setInterval> | undefined;
   watch(isLoading, (loading) => {
     if (loading) {
-      loadingMessage.value = t('chat.messageWaitingAgent');
+      loadingMessage.value = t('chat.message.agentWaitingMessage');
       interval = setInterval(() => {
         loadingMessage.value += '.';
         if (loadingMessage.value.endsWith('....'))

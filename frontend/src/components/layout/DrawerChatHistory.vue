@@ -3,7 +3,7 @@
     <div class="column justify-between full-height">
       <q-scroll-area class="col">
         <q-list>
-          <q-item-label header> {{ $t('chat.historyTitle') }} </q-item-label>
+          <q-item-label header> {{ $t('chat.history.title') }} </q-item-label>
         </q-list>
       </q-scroll-area>
 

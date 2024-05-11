@@ -6,10 +6,15 @@ export default {
 
   // LLM chat-related
   chat: {
-    historyTitle: 'Your chat history',
-    messagePlaceholder: 'Your message...',
-    messageConfig: 'Message config',
-    messageMultiline: 'Multiline',
-    messageWaitingAgent: "I'm thinking",
+    history: {
+      title: 'Your chat history',
+      chatFromDate: 'Chat from ',
+    },
+    message: {
+      placeholder: 'Your message...',
+      agentWaitingMessage: "I'm thinking",
+      configTitle: 'Message config',
+      configMultiline: 'Multiline',
+    },
   },
 };
