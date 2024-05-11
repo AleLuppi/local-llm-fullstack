@@ -23,6 +23,17 @@ function apiDataToChat(data: Omit<ChatProps, 'uid'> & { id: string }): Chat {
 }
 
 /**
+ * Retrieve all chats from chat history.
+ *
+ * @returns {Promise<Chat[]>} Chats.
+ */
+export function getChats(): Promise<Chat[]> {
+  return apiAgent
+    .get('/chat/history')
+    .then((response) => response.data.map(apiDataToChat));
+}
+
+/**
  * Create new chat with optional message.
  *
  * @param {string} message - Optional message to override chat model value.
