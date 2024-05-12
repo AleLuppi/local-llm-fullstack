@@ -1,6 +1,6 @@
 import { apiAgent } from 'src/boot/axios';
 import { Chat } from 'src/models/chat';
-import { ChatProps } from 'src/models/chatInterface';
+import type { ChatMessageProps, ChatProps } from 'src/models/chatInterface';
 
 /**
  * Get LLM agent health information.
@@ -17,9 +17,24 @@ export function getHealth(): Promise<{ status: string }> {
  * @param {Omit<ChatProps, 'uid'> & { id: string }} data - The API data to convert.
  * @returns {Chat} The Chat object created from the API data.
  */
-function apiDataToChat(data: Omit<ChatProps, 'uid'> & { id: string }): Chat {
-  const { id: uid, ...chatData } = data;
-  return new Chat({ uid, ...chatData });
+function apiDataToChat(
+  data: Omit<ChatProps, 'uid' | 'creationDate' | 'messages'> & {
+    id: string;
+    creation_datetime: Date;
+    messages: (Omit<ChatMessageProps, 'date'> & { datetime: Date })[];
+  },
+): Chat {
+  const {
+    id: uid,
+    creation_datetime: creationDate,
+    messages: apiMessages,
+    ...chatData
+  } = data;
+  const messages = apiMessages.map((apiMessage) => {
+    const { datetime: date, ...message } = apiMessage;
+    return { ...message, date: date };
+  });
+  return new Chat({ uid, creationDate, messages, ...chatData });
 }
 
 /**
