@@ -3,10 +3,10 @@ File: save.py
 
 API methods to locally store chat messages.
 """
-from database.write import write_chat, append_to_chat
+from database.write import write_chat, append_to_chat, update_chat
 from models import ChatRole, Chat
 from .load import resolve_chat
-from .query import chat_agent
+from .query import chat_agent, chat_summarize_agent
 
 
 def save_new_chat(chat: Chat | None = None) -> Chat:
@@ -49,4 +49,24 @@ def save_agent_message(chat: Chat, message: str | None = None) -> Chat:
 
     # Append message to chat
     append_to_chat(chat, message, ChatRole.AGENT)
+    return chat
+
+
+def save_chat_summary(chat: Chat, summary: str = None) -> Chat:
+    """
+    Save chat summary.
+
+    :param chat: chat to save summary of.
+    :param summary: optional summary to save, otherwise a new summary will be generated.
+    :return: updated chat with summary.
+    """
+    # Summarize chat
+    if chat.summary is None and summary is None:
+        summary = chat_summarize_agent(chat)
+
+    # Save summary
+    if summary is not None:
+        chat.summary = summary
+        update_chat(chat)
+
     return chat

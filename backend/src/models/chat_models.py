@@ -57,6 +57,10 @@ class Chat:
     def summary(self):
         return self._summary
 
+    @summary.setter
+    def summary(self, value: str):
+        self._summary = value
+
     @property
     def creation_datetime(self):
         return self._creation_datetime

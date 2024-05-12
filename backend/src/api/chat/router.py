@@ -7,7 +7,7 @@ Set API routes for chat management.
 from fastapi import APIRouter, status
 
 from .load import load_history, load_chat, resolve_chat
-from .save import save_user_message, save_new_chat, save_agent_message
+from .save import save_user_message, save_new_chat, save_agent_message, save_chat_summary
 
 # Init router
 router = APIRouter()
@@ -52,10 +52,13 @@ def append_chat(chat_id: str, message: str, reply: bool = False):
     # Save chat message to selected chat
     if chat is not None:
         # NOTE: chat messages stored via API will be saved with USER role
-        chat = save_user_message(chat, message)
+        save_user_message(chat, message)
 
         if reply:
-            chat = save_agent_message(chat)
+            save_agent_message(chat)
+
+        # Create chat summary if required
+        save_chat_summary(chat)
 
     return chat.to_dict() if chat is not None else None
 
@@ -75,9 +78,12 @@ def create_chat(message: str | None = None, reply: bool = False):
     # Save chat message into a new chat
     if message is not None:
         # NOTE: chat messages stored via API will be saved with USER role
-        chat = save_user_message(chat, message)
+        save_user_message(chat, message)
 
         if reply:
-            chat = save_agent_message(chat)
+            save_agent_message(chat)
+
+        # Create chat summary if required
+        save_chat_summary(chat)
 
     return chat.to_dict() if chat is not None else None

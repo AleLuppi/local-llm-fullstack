@@ -4,7 +4,7 @@ File: query.py
 API methods to provide answers to queries in chat.
 """
 
-from processors.llm.general_chat import query_llm, chat_llm
+from processors.llm.general_chat import query_llm, chat_llm, summarize_chat
 from models import Chat
 
 
@@ -30,3 +30,13 @@ def chat_agent(chat: Chat) -> str:
     :return: LLM response.
     """
     return chat_llm(chat)
+
+
+def chat_summarize_agent(chat: Chat) -> str:
+    """
+    Summarize chat with LLM.
+
+    :param chat: current chat to summarize.
+    :return: LLM response.
+    """
+    return summarize_chat(chat)
