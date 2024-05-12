@@ -17,8 +17,9 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
+import { PageName } from 'src/router';
 import { useAgentChat } from 'src/composables/agentChat';
 import { useChatHistoryStore } from 'src/stores/chatHistoryStore';
 
@@ -30,8 +31,9 @@ const InputAgentMessage = defineAsyncComponent(
   () => import('src/components/InputAgentMessage.vue'),
 );
 
-// Get route
+// Get router
 const route = useRoute();
+const router = useRouter();
 
 // Get refs
 const {
@@ -49,9 +51,20 @@ const { dateSortedChats } = storeToRefs(chatHistoryStore);
 
 // Retrieve requested chat
 watch(
-  [() => route.params.id, dateSortedChats],
-  () => {
-    chatReference.value = chatHistoryStore.getChat(route.params.id as string);
+  [() => route.params.id as string, dateSortedChats],
+  ([currId, currChats], [prevId, prevChats]) => {
+    // Open new chat if just created, otherwise open requested chat
+    const newChat = currChats.find((chat) => !prevChats?.includes(chat));
+    if (
+      currId == prevId &&
+      currId == undefined &&
+      newChat != undefined &&
+      newChat == chatReference.value &&
+      currChats.length == (prevChats ?? []).length + 1
+    )
+      router.push({ name: PageName.chat, params: { id: newChat.uid } });
+    else
+      chatReference.value = chatHistoryStore.getChat(route.params.id as string);
   },
   { immediate: true },
 );
