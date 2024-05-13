@@ -99,11 +99,11 @@ def summarize_chat(chat: Chat | str) -> str:
     summary_prompt = ChatPromptTemplate.from_messages([
         SystemMessage(content=prompt_common_qa_summary),
         MessagesPlaceholder(variable_name="messages"),
-        SystemMessage(content="Chat summary: "),
+        SystemMessage(content="Short summary of the chat: "),
     ])
 
     # Create chain
     summary_llm_chain = summary_prompt | llm_model
 
-    return __invoke(summary_llm_chain, __chat_to_messages(chat))
+    return __invoke(summary_llm_chain, __chat_to_messages(chat)).strip('."').capitalize()
 

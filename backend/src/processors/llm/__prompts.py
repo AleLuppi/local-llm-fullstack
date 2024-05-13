@@ -35,6 +35,9 @@ Create a summary title for the following conversation. \
 It must be one sentence only, shorter than 70 characters, and without punctuation.
 It should be in the language of the user's message.
 
+Example of good summary: "Math equation solving steps".
+Example of bad summary: "Human ask to solve an equation, 4 steps to solve the equation".
+
 Below, the conversation you should build the title for.
 ----------
 """
