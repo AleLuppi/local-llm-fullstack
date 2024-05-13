@@ -45,8 +45,9 @@ export function useAgentChat() {
     // Create or update chat
     requestAgentAnswer(chatReference.value, text)
       .then((response) => {
-        chatReference.value = response;
         updateChat(response);
+        if (chatReference.value?.uid == response.uid)
+          chatReference.value = response;
       })
       .catch(() => (isError.value = true))
       .finally(() => {
