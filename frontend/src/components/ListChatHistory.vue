@@ -14,7 +14,7 @@
       </div>
     </q-btn>
 
-    <q-scroll-area class="col">
+    <q-scroll-area class="col" content-style="width: 100%">
       <q-list>
         <q-item-label v-if="title" header class="q-px-none">
           {{ title }}
@@ -31,7 +31,13 @@
           "
         >
           <q-item-section>
-            <q-item-label>
+            <q-item-label
+              style="
+                white-space: nowrap;
+                overflow-x: hidden;
+                text-overflow: ellipsis;
+              "
+            >
               {{
                 chat.summary ??
                 (chat.creationDate
