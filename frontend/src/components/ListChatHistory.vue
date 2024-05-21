@@ -36,7 +36,7 @@
                 chat.summary ??
                 (chat.creationDate
                   ? $t('chat.history.chatFromDate') + $d(chat.creationDate)
-                  : 'Hello')
+                  : $t('chat.history.chatUnknown'))
               }}
             </q-item-label>
           </q-item-section>
