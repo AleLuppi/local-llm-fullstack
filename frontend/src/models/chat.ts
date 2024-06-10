@@ -34,6 +34,10 @@ export class Chat implements ChatProps {
     return this.lastMessage?.date ?? this.creationDate ?? new Date(0);
   }
 
+  get length() {
+    return this.messages.length;
+  }
+
   constructor(props: ChatProps) {
     this.uid = props.uid;
     this.messages = props.messages.map((message) => new ChatMessage(message));

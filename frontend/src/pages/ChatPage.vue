@@ -10,7 +10,7 @@
 
     <!-- Display chat input -->
     <div class="chat-elements q-px-md q-pb-md q-pt-sm glass">
-      <input-agent-message v-model="chatMessage" @submit="chatSubmit" />
+      <input-agent-message v-model="chatMessage" @submit="onSubmit" />
     </div>
   </q-page>
 </template>
@@ -18,7 +18,6 @@
 <script setup lang="ts">
 import { defineAsyncComponent, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { storeToRefs } from 'pinia';
 import { PageName } from 'src/router';
 import { useAgentChat } from 'src/composables/agentChat';
 import { useChatHistoryStore } from 'src/stores/chatHistoryStore';
@@ -47,27 +46,43 @@ const {
 
 // Retrieve chat history
 const chatHistoryStore = useChatHistoryStore();
-const { dateSortedChats } = storeToRefs(chatHistoryStore);
 
 // Retrieve requested chat
 watch(
-  [() => route.params.id as string, dateSortedChats],
-  ([currId, currChats], [prevId, prevChats]) => {
-    // Open new chat if just created, otherwise open requested chat
-    const newChat = currChats.find((chat) => !prevChats?.includes(chat));
-    if (
-      currId == prevId &&
-      currId == undefined &&
-      newChat != undefined &&
-      newChat == chatReference.value &&
-      currChats.length == (prevChats ?? []).length + 1
-    )
-      router.push({ name: PageName.chat, params: { id: newChat.uid } });
-    else
-      chatReference.value = chatHistoryStore.getChat(route.params.id as string);
+  [() => route.params.id as string, () => route.query.status],
+  ([currId, currStatus], [, prevStatus]) => {
+    // Skip chat load if just setting a new internal status
+    if (currStatus != prevStatus && currStatus) return;
+
+    // Open requested chat
+    chatReference.value = chatHistoryStore.getChat(currId as string);
   },
   { immediate: true },
 );
+
+// Ensure chat id param matches current opened chat
+watch(
+  () => chatReference.value?.uid,
+  (newId) => {
+    if (newId || newId === undefined)
+      router.replace({ name: PageName.chat, params: { id: newId } });
+  },
+);
+
+/**
+ * Manage chat message submit.
+ *
+ * @param {string} message - The user chat message to be submitted.
+ */
+function onSubmit(message: string) {
+  // If new chat is being submitted, add a query param to route
+  // to notify this, so that a new chat may optionally be opened
+  if (route.params.id == undefined)
+    router.push({ name: PageName.chat, query: { status: 'new' } });
+
+  // Actually submit message
+  chatSubmit(message);
+}
 </script>
 
 <style scoped lang="scss">

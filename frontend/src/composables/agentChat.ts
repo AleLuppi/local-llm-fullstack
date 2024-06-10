@@ -21,6 +21,9 @@ export function useAgentChat() {
   // Catch error status on last message
   const isError = ref(false);
 
+  // Check how many pending chats are present
+  const countLoading = ref(0);
+
   // Current chat history of messages
   const allChatMessages = computed<ChatMessage[]>(
     () => chatReference.value?.messages ?? [],
@@ -41,17 +44,27 @@ export function useAgentChat() {
     // Set loading and error state
     isLoading.value = true;
     isError.value = false;
+    countLoading.value++;
 
     // Create or update chat
     requestAgentAnswer(chatReference.value, text)
       .then((response) => {
         updateChat(response);
-        if (chatReference.value?.uid == response.uid)
+
+        // Update current chat if it's same chat or last one waiting for answer
+        if (
+          chatReference.value &&
+          (chatReference.value.uid == response.uid ||
+            (!chatReference.value.uid && countLoading.value == 1))
+        )
           chatReference.value = response;
       })
-      .catch(() => (isError.value = true))
+      .catch(() => {
+        isError.value = true;
+      })
       .finally(() => {
         isLoading.value = false;
+        countLoading.value = Math.max(countLoading.value - 1, 0);
       });
 
     // Build a temporary chat while waiting for LLM response
@@ -64,6 +77,14 @@ export function useAgentChat() {
       }),
     );
   }
+
+  // Clear state if a new chat is opened
+  watch(chatReference, (currChat, prevChat) => {
+    if (!currChat || (currChat.uid && currChat.uid !== prevChat?.uid)) {
+      isLoading.value = false;
+      isError.value = false;
+    }
+  });
 
   // Build a waiting message when loading answer from agent
   let interval: ReturnType<typeof setInterval> | undefined;
