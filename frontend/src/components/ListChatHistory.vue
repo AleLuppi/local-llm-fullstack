@@ -14,7 +14,11 @@
       </div>
     </q-btn>
 
-    <q-scroll-area class="col" content-style="width: 100%">
+    <q-scroll-area
+      class="col"
+      content-style="width: 100%"
+      content-active-style="width: 100%"
+    >
       <q-list>
         <q-item-label v-if="title" header class="q-px-none">
           {{ title }}
