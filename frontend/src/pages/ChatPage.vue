@@ -49,13 +49,16 @@ const chatHistoryStore = useChatHistoryStore();
 
 // Retrieve requested chat
 watch(
-  [() => route.params.id as string, () => route.query.status],
+  [() => route.params.id as string | undefined, () => route.query.status],
   ([currId, currStatus], [, prevStatus]) => {
     // Skip chat load if just setting a new internal status
     if (currStatus != prevStatus && currStatus) return;
 
     // Open requested chat
-    chatReference.value = chatHistoryStore.getChat(currId as string);
+    chatReference.value = currId ? chatHistoryStore.getChat(currId) : undefined;
+
+    // Delete chat ID from url if chat does not exist
+    if (!chatReference.value) router.replace({ name: PageName.chat });
   },
   { immediate: true },
 );
