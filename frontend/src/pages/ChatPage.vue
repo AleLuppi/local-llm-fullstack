@@ -10,7 +10,11 @@
 
     <!-- Display chat input -->
     <div class="chat-elements q-px-md q-pb-md q-pt-sm glass">
-      <input-agent-message v-model="chatMessage" @submit="onSubmit" />
+      <input-agent-message
+        v-model="chatMessage"
+        :loading="waitingAgent"
+        @submit="onSubmit"
+      />
     </div>
   </q-page>
 </template>

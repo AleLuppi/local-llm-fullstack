@@ -30,6 +30,7 @@
           unelevated
           padding="8px 7px 8px 9px"
           style="border-radius: 8px"
+          :loading="loading"
           @click="onSubmit"
         />
       </div>
@@ -71,6 +72,9 @@ import {
 
 // Define props
 const props = defineProps<{
+  // set chat to loading and disable submit
+  loading?: boolean;
+
   // preserve model value on message submit
   preserveOnSubmit?: boolean;
 
@@ -101,6 +105,9 @@ watch(modelValue, (val) => {
  * Submit chat message.
  */
 function onSubmit() {
+  // Skip submit if in loading state
+  if (props.loading) return;
+
   if (modelValue.value?.trim()) emit('submit', modelValue.value);
 
   if (!props.preserveOnSubmit) modelValue.value = '';
