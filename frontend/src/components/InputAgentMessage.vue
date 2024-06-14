@@ -18,7 +18,7 @@
         v-model="modelValue"
         autogrow
         outlined
-        :placeholder="$t('chat.messagePlaceholder')"
+        :placeholder="$t('chat.message.placeholder')"
         class="input-chat col"
         :bg-color="$q.dark.isActive ? 'dark' : 'white'"
         @keydown.enter="multiLineMessage ? undefined : onSubmit()"
@@ -30,6 +30,7 @@
           unelevated
           padding="8px 7px 8px 9px"
           style="border-radius: 8px"
+          :loading="loading"
           @click="onSubmit"
         />
       </div>
@@ -45,11 +46,11 @@
           style="border-radius: 8px; max-width: 80%"
         >
           <span class="col-12 q-pt-sm q-px-sm text-small">
-            {{ $t('chat.messageConfig') }}
+            {{ $t('chat.message.configTitle') }}
           </span>
           <q-checkbox
             v-model="multiLineMessage"
-            :label="$t('chat.messageMultiline')"
+            :label="$t('chat.message.configMultiline')"
             :checked-icon="fasAlignLeft"
             :unchecked-icon="fasAlignLeft"
             :class="{ 'text-grey': !multiLineMessage }"
@@ -71,6 +72,9 @@ import {
 
 // Define props
 const props = defineProps<{
+  // set chat to loading and disable submit
+  loading?: boolean;
+
   // preserve model value on message submit
   preserveOnSubmit?: boolean;
 
@@ -101,6 +105,9 @@ watch(modelValue, (val) => {
  * Submit chat message.
  */
 function onSubmit() {
+  // Skip submit if in loading state
+  if (props.loading) return;
+
   if (modelValue.value?.trim()) emit('submit', modelValue.value);
 
   if (!props.preserveOnSubmit) modelValue.value = '';

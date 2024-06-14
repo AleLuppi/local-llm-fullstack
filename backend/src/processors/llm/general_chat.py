@@ -4,7 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from assets import LLM_MODEL_MISTRAL_7B
 from models import Chat, ChatRole
-from .__prompts import prompt_common_qa
+from .__prompts import prompt_common_qa, prompt_common_qa_summary
 from .__messages import SystemMessage, HumanMessage, AIMessage
 
 
@@ -22,6 +22,17 @@ prompt = ChatPromptTemplate.from_messages([
 llm_chain = prompt | llm_model
 
 
+def __invoke(chain=llm_chain, messages: [BaseMessage] = ()) -> str:
+    """
+    Invoke specific LLM chain with messages.
+
+    :param chain: LLM chain to invoke.
+    :param messages: messages to pass to LLM.
+    :return: LLM response.
+    """
+    return str(chain.invoke({"messages": messages})).strip()
+
+
 def __invoke_llm(messages: [BaseMessage]) -> str:
     """
     Invoke LLM with messages.
@@ -29,7 +40,22 @@ def __invoke_llm(messages: [BaseMessage]) -> str:
     :param messages: messages to pass to LLM.
     :return: LLM response.
     """
-    return str(llm_chain.invoke({"messages": messages})).strip()
+    return __invoke(llm_chain, messages)
+
+
+def __chat_to_messages(chat: Chat) -> [BaseMessage]:
+    """
+    Translate chat into messages to pass to LLM.
+
+    :param chat: chat to translate.
+    :return: messages to pass to LLM.
+    """
+    return [
+        (HumanMessage if message.role == ChatRole.USER else
+         AIMessage if message.role == ChatRole.AGENT else
+         SystemMessage)(content=message.content) for message in chat.messages
+        if message.role in [ChatRole.USER, ChatRole.AGENT, ChatRole.SYSTEM]
+    ]
 
 
 def query_llm(query: str) -> str:
@@ -56,12 +82,28 @@ def chat_llm(chat: Chat | str) -> str:
         return query_llm(chat)
 
     # Translate chat into messages to pass to LLM
-    messages = [
-        (HumanMessage if message.role == ChatRole.USER else
-         AIMessage if message.role == ChatRole.AGENT else
-         SystemMessage)(content=message.content) for message in chat.messages
-        if message.role in [ChatRole.USER, ChatRole.AGENT, ChatRole.SYSTEM]
-    ]
+    messages = __chat_to_messages(chat)
 
     # Chat history case
     return __invoke_llm(messages)
+
+
+def summarize_chat(chat: Chat | str) -> str:
+    """
+    Summarize chat with LLM.
+
+    :param chat: chat to summarize.
+    :return: summarized chat.
+    """
+    # Init prompt
+    summary_prompt = ChatPromptTemplate.from_messages([
+        SystemMessage(content=prompt_common_qa_summary),
+        MessagesPlaceholder(variable_name="messages"),
+        SystemMessage(content="Short summary of the chat: "),
+    ])
+
+    # Create chain
+    summary_llm_chain = summary_prompt | llm_model
+
+    return __invoke(summary_llm_chain, __chat_to_messages(chat)).strip('."').capitalize()
+

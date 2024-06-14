@@ -15,7 +15,8 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: MainLayout,
-    children: [{ name: PageName.chat, path: '', component: ChatPage }],
+    redirect: { name: PageName.chat },
+    children: [{ name: PageName.chat, path: 'chat/:id?', component: ChatPage }],
   },
 
   // Unknown route

@@ -6,8 +6,9 @@ Set API routes for chat management.
 
 from fastapi import APIRouter, status
 
+from .flows import handle_user_message
 from .load import load_history, load_chat, resolve_chat
-from .save import save_user_message, save_new_chat, save_agent_message
+from .save import save_new_chat
 
 # Init router
 router = APIRouter()
@@ -21,7 +22,7 @@ def get_chats(limit: int = None):
     :param limit: maximum number of messages to retrieve.
     :return: list of all chat messages.
     """
-    return load_history(limit=limit)
+    return [chat.to_dict() for chat in load_history(limit=limit)]
 
 
 @router.get("/id/{chat_id}", status_code=status.HTTP_200_OK)
@@ -32,15 +33,16 @@ def get_chat(chat_id: str):
     :param chat_id: ID of the chat to retrieve
     :return: list of chat messages associated to selected chat ID.
     """
-    return load_chat(chat_id)
+    chat = load_chat(chat_id)
+    return chat.to_dict() if chat is not None else None
 
 
 @router.post("/id/{chat_id}", status_code=status.HTTP_200_OK)
-def append_chat(chat_id: str, message: str, reply: bool = False):
+def append_chat_message(chat_id: str, message: str, reply: bool = False):
     """
     Append a message to the selected chat.
 
-    :param chat_id: ID of the chat to append to
+    :param chat_id: ID of the chat to append to.
     :param message: chat message to store.
     :param reply: flag to ask for llm answer generation.
     :return: chat associated to selected chat ID.
@@ -50,11 +52,7 @@ def append_chat(chat_id: str, message: str, reply: bool = False):
 
     # Save chat message to selected chat
     if chat is not None:
-        # NOTE: chat messages stored via API will be saved with USER role
-        chat = save_user_message(chat, message)
-
-        if reply:
-            chat = save_agent_message(chat)
+        handle_user_message(chat, message, reply)
 
     return chat.to_dict() if chat is not None else None
 
@@ -73,10 +71,6 @@ def create_chat(message: str | None = None, reply: bool = False):
 
     # Save chat message into a new chat
     if message is not None:
-        # NOTE: chat messages stored via API will be saved with USER role
-        chat = save_user_message(chat, message)
-
-        if reply:
-            chat = save_agent_message(chat)
+        handle_user_message(chat, message, reply)
 
     return chat.to_dict() if chat is not None else None

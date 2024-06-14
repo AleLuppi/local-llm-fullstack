@@ -28,3 +28,16 @@ Be concise yet informative, and prioritize answering questions directly over gen
 Below, the messages user (label "{human_message_label}:") and you (label "{ai_message_label}") have exchanged so far.
 ----------
 """
+
+# Prompt to summarize common knowledge QA
+prompt_common_qa_summary = f"""\
+Create a summary title for the following conversation. \
+It must be one sentence only, shorter than 70 characters, and without punctuation.
+It should be in the language of the user's message.
+
+Example of good summary: "Math equation solving steps".
+Example of bad summary: "Human ask to solve an equation, 4 steps to solve the equation".
+
+Below, the conversation you should build the title for.
+----------
+"""
