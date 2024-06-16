@@ -1,4 +1,6 @@
-from os.path import abspath, join as path_join, dirname
+from os import path
+
+from config import CONFIG
 
 
 def resolve(*paths: str):
@@ -8,10 +10,12 @@ def resolve(*paths: str):
     :param paths: path components to join.
     :return: absolute path resolved to the "assets" directory.
     """
-    # Base "assets" directory name
-    __DIR_NAME = dirname(__file__)
-
-    return abspath(path_join(__DIR_NAME, *paths))
+    # Join paths to base "assets" directory name
+    return path.abspath(path.join(
+        CONFIG['APP_PATH'],
+        path.basename(path.dirname(__file__)),
+        *paths
+    ))
 
 
 LLM_MODEL_MISTRAL_7B = resolve("models", "mistral-7b-openorca.gguf2.Q4_0.gguf")
