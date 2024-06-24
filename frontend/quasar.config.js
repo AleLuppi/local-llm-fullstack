@@ -207,7 +207,9 @@ module.exports = configure(function (/* ctx */) {
 
         appId: 'local-llm-frontend',
 
-        extraResources: {},
+        // FIXME
+        // extraResources: {
+        // },
       },
     },
 
