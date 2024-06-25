@@ -1,6 +1,13 @@
 <template>
-  <q-header v-bind="$props" v-model="modelValue">
-    <bar-windowed v-if="showBar" />
+  <q-header
+    v-bind="$props"
+    v-model="modelValue"
+    :class="bgColor ? `bg-${bgColor}` : ''"
+  >
+    <bar-windowed
+      v-if="showWindowBar"
+      :class="barColor ? `bg-${barColor}` : ''"
+    />
   </q-header>
 </template>
 
@@ -10,11 +17,19 @@ import type { QHeaderProps } from 'quasar';
 import BarWindowed from 'components/layout/BarWindowed.vue';
 
 // Define props
-defineProps<QHeaderProps>();
+defineProps<
+  QHeaderProps & {
+    // header background color
+    bgColor?: string;
+
+    // color of the main utility bar
+    barColor?: string;
+  }
+>();
 
 // Define model
 const modelValue = defineModel<QHeaderProps['modelValue']>({ default: true });
 
 // Should display utility bar
-const showBar = computed(() => process.env.MODE === 'electron');
+const showWindowBar = computed(() => process.env.MODE === 'electron');
 </script>
