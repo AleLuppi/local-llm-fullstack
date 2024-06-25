@@ -32,7 +32,7 @@ module.exports = configure(function (/* ctx */) {
     boot: ['axios', 'i18n', 'navigationGuards', 'registerComponents'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: ['app.scss', 'glass.scss'],
+    css: ['app.scss', 'glass.scss', 'palette.scss'],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
