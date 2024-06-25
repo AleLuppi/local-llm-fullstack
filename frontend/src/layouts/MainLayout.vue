@@ -1,9 +1,9 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh LpR fFf">
     <header-main
       v-model:left-drawer-open="leftDrawerOpen"
       bordered
-      class="glass text-inherit"
+      class="bg-primary-dark"
     />
 
     <drawer-chat-history v-model="leftDrawerOpen" show-if-above bordered />
