@@ -207,9 +207,22 @@ module.exports = configure(function (/* ctx */) {
 
         appId: 'local-llm-frontend',
 
-        // FIXME
-        // extraResources: {
-        // },
+        extraFiles: [
+          {
+            from: path.resolve(
+              __dirname,
+              '..',
+              'backend',
+              'dist',
+              process.env.APP_API_NAME,
+            ),
+            to: process.env.APP_SERVER_LOCAL_PATH ?? 'server',
+          },
+        ],
+
+        nsis: {
+          preCompressedFileExtensions: ['.gguf'],
+        },
       },
     },
 

@@ -18,6 +18,10 @@
 
 import { contextBridge } from 'electron';
 import apiWindow from './expose/apiWindow';
+import apiServer from './expose/apiServer';
 
 // Custom API to manage the window frame
 contextBridge.exposeInMainWorld('apiWindow', apiWindow);
+
+// Custom API to manage local server
+contextBridge.exposeInMainWorld('apiServer', apiServer);
