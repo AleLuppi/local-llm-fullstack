@@ -1,5 +1,13 @@
 <template>
-  <q-page class="column">
+  <q-page class="column" style="padding-top: 50px">
+    <q-page-sticky
+      position="top"
+      expand
+      class="glass text-inherit q-header q-header--bordered"
+    >
+      <toolbar-agent-info />
+    </q-page-sticky>
+
     <!-- Display current chat history -->
     <list-chat-messages
       :messages="allChatMessages"
@@ -27,6 +35,9 @@ import { useAgentChat } from 'src/composables/agentChat';
 import { useChatHistoryStore } from 'src/stores/chatHistoryStore';
 
 // Import components
+const ToolbarAgentInfo = defineAsyncComponent(
+  () => import('src/components/ToolbarAgentInfo.vue'),
+);
 const ListChatMessages = defineAsyncComponent(
   () => import('src/components/ListChatMessages.vue'),
 );

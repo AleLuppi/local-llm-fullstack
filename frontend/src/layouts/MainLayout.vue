@@ -1,9 +1,6 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <header-main
-      v-model:left-drawer-open="leftDrawerOpen"
-      bar-color="primary-dark"
-    />
+    <header-main bar-color="primary-dark" />
 
     <drawer-chat-history v-model="leftDrawerOpen" show-if-above bordered />
 
@@ -14,10 +11,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { defineAsyncComponent } from 'vue';
 import HeaderMain from 'components/layout/HeaderMain.vue';
-import DrawerChatHistory from 'components/layout/DrawerChatHistory.vue';
+import { useDrawers } from 'src/composables/drawers';
+
+// Import components
+const DrawerChatHistory = defineAsyncComponent(
+  () => import('components/layout/DrawerChatHistory.vue'),
+);
 
 // Drawer status
-const leftDrawerOpen = ref(false);
+const { leftDrawerOpen } = useDrawers();
 </script>

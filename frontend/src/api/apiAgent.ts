@@ -7,8 +7,13 @@ import type { ChatMessageProps, ChatProps } from 'src/models/chatInterface';
  *
  * @returns {Promise<{ status: string }>} LLM agent status.
  */
-export function getHealth(): Promise<{ status: string }> {
-  return apiAgent.get('/health');
+export function isHealthy(): Promise<boolean> {
+  return apiAgent
+    .get('/health')
+    .then(
+      (response) =>
+        (response.data as { status: string }).status?.toUpperCase() == 'OK',
+    );
 }
 
 /**
