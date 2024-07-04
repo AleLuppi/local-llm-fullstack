@@ -39,7 +39,6 @@ import { useDrawers } from 'src/composables/drawers';
 const { leftDrawerOpen } = useDrawers();
 
 // Get app name and version
-const appName = import.meta.env.VITE_APP_NAME;
 const appVersion = import.meta.env.VITE_APP_VERSION;
 
 // Check agent status

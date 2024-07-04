@@ -1,4 +1,3 @@
-import { watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppLayoutStore } from 'src/stores/appLayoutStore';
 
