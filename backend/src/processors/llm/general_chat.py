@@ -1,4 +1,3 @@
-from langchain_community.llms import GPT4All
 from langchain_core.messages import BaseMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
@@ -6,41 +5,11 @@ from assets import LLM_MODEL_MISTRAL_7B
 from models import Chat, ChatRole
 from .__prompts import prompt_common_qa, prompt_common_qa_summary
 from .__messages import SystemMessage, HumanMessage, AIMessage
+from .__processor_llm import ProcessorLLM
 
 
 # Init model
-llm_model = GPT4All(model=LLM_MODEL_MISTRAL_7B)
-
-# Init prompt
-prompt = ChatPromptTemplate.from_messages([
-    SystemMessage(content=prompt_common_qa),
-    MessagesPlaceholder(variable_name="messages"),
-    AIMessage(content=""),
-])
-
-# Create chain
-llm_chain = prompt | llm_model
-
-
-def __invoke(chain=llm_chain, messages: [BaseMessage] = ()) -> str:
-    """
-    Invoke specific LLM chain with messages.
-
-    :param chain: LLM chain to invoke.
-    :param messages: messages to pass to LLM.
-    :return: LLM response.
-    """
-    return str(chain.invoke({"messages": messages})).strip()
-
-
-def __invoke_llm(messages: [BaseMessage]) -> str:
-    """
-    Invoke LLM with messages.
-
-    :param messages: messages to pass to LLM.
-    :return: LLM response.
-    """
-    return __invoke(llm_chain, messages)
+llm = ProcessorLLM(path=LLM_MODEL_MISTRAL_7B, prompt=prompt_common_qa)
 
 
 def __chat_to_messages(chat: Chat) -> [BaseMessage]:
@@ -65,7 +34,7 @@ def query_llm(query: str) -> str:
     :param query: query to pass to LLM.
     :return: LLM response.
     """
-    return __invoke_llm([
+    return llm.invoke([
         HumanMessage(content=query),
     ])
 
@@ -85,7 +54,7 @@ def chat_llm(chat: Chat | str) -> str:
     messages = __chat_to_messages(chat)
 
     # Chat history case
-    return __invoke_llm(messages)
+    return llm.invoke(messages)
 
 
 def summarize_chat(chat: Chat | str) -> str:
@@ -102,8 +71,9 @@ def summarize_chat(chat: Chat | str) -> str:
         SystemMessage(content="Short summary of the chat: "),
     ])
 
-    # Create chain
-    summary_llm_chain = summary_prompt | llm_model
+    # Get summary llm
+    summary_llm = llm.clone()
+    summary_llm.prompt = summary_prompt
 
-    return __invoke(summary_llm_chain, __chat_to_messages(chat)).strip('."').capitalize()
+    return summary_llm.invoke(__chat_to_messages(chat)).strip('."').capitalize()
 
