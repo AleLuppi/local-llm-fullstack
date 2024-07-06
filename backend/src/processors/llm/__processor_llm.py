@@ -106,6 +106,8 @@ class ProcessorLLM:
         if stored_model is not None:
             stored_model.update({k: v for k, v in self.model.items() if v is not None})
             self._model = stored_model
+        else:
+            self._models[self.model['name']] = self.model
 
         # Initialize model if not already done
         if self.model['model'] is None:
@@ -121,8 +123,50 @@ class ProcessorLLM:
             self.model['model'] = GPT4All(model=self.model["path"])
             self._models[self.model["name"]] = self.model
         elif self.model.get('download_url'):
-            # TODO
-            raise NotImplementedError("Model will not be downloaded.")
+            await self._download_model()
+            await self._prepare_model()
+
+    async def _download_model(self, model_info: ModelInfo = None):
+        """
+        Download LLM model from url.
+
+        :param model_info: optional model info with download url.
+        """
+        # Start download of model
+        if model_info is None:
+            model_info = self.model
+        model_name = model_info["name"]
+        model_url = model_info["download_url"]
+        try:
+            if model_url is None:
+                raise URLError(f"Model {model_name} has no download url.")
+            opener = request.build_opener()
+            opener.addheaders = [('User-Agent', f'{CONFIG["APP_API_NAME"]}/{CONFIG["APP_API_VERSION"]}')]
+            request.install_opener(opener)
+            request.urlretrieve(model_url, model_info["path"],
+                                lambda blocks_num, block_size, total_size, model=model_name:
+                                self._download_progress(blocks_num, block_size, total_size, model))
+
+            # Finally, make sure download is set as complete
+            self._models[model_name]["download_url"] = model_url
+            self._models[model_name]["download_progress"] = 1
+
+        except (URLError, HTTPError):
+            # Set download as failed
+            self._models[model_name]["download_url"] = model_url
+            self._models[model_name]["download_progress"] = 0
+
+    def _download_progress(self, blocks_num, block_size, total_size, model_name: str):
+        """
+        Update download progress info.
+
+        :param blocks_num: number of blocks downloaded so far.
+        :param block_size: size of each block.
+        :param total_size: total size of download.
+        :param model_name: name of model being downloaded.
+        """
+        # Store download progress
+        self._models[model_name]["download_url"] = (blocks_num * block_size) / total_size
 
     def invoke(self, messages: [BaseMessage] = ()) -> str:
         """

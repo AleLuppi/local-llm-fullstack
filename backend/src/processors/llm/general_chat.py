@@ -1,3 +1,4 @@
+from os.path import basename
 from langchain_core.messages import BaseMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
@@ -9,7 +10,8 @@ from .__processor_llm import ProcessorLLM
 
 
 # Init model
-llm = ProcessorLLM(path=LLM_MODEL_MISTRAL_7B, prompt=prompt_common_qa)
+llm = ProcessorLLM(path=LLM_MODEL_MISTRAL_7B, prompt=prompt_common_qa,
+                   download=rf"https://gpt4all.io/models/gguf/{basename(LLM_MODEL_MISTRAL_7B)}")
 
 
 def __chat_to_messages(chat: Chat) -> [BaseMessage]:
