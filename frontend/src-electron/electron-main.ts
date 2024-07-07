@@ -20,6 +20,7 @@ function createWindow() {
     height: 600,
     useContentSize: true,
     frame: false,
+    show: false,
     webPreferences: {
       contextIsolation: true,
       sandbox: false, // to be able to import @electron/remote in preload script
@@ -37,9 +38,13 @@ function createWindow() {
     alwaysOnTop: false,
   });
 
-  // FIXME Load and display splash screen while loading main window
-  // splashWindow.loadFile(
-  // );
+  // Load and display splash screen while loading main window
+  splashWindow.loadFile(
+    path.resolve(
+      process.env.DEV ? 'src-electron' : process.resourcesPath,
+      'splash.html',
+    ),
+  );
   splashWindow.center();
 
   enable(mainWindow.webContents);
@@ -50,7 +55,7 @@ function createWindow() {
     mainWindow?.show();
 
     // Immediately start the API server
-    apiServer.start();
+    if (process.env.PROD) apiServer.start();
   });
 
   // Disable dev tools in production

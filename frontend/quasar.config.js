@@ -220,6 +220,14 @@ module.exports = configure(function (/* ctx */) {
           },
         ],
 
+        extraResources: [
+          { from: path.resolve(__dirname, 'src-electron', 'splash.html') },
+          {
+            from: path.resolve(__dirname, 'src-electron', 'assets'),
+            to: 'assets',
+          },
+        ],
+
         nsis: {
           preCompressedFileExtensions: ['.gguf'],
         },
