@@ -12,6 +12,7 @@
     "dev": "quasar dev",
     "dev:api": "concurrently \"npm run dev\" \"node start-server\"",
     "build": "quasar build",
+    "build:electron": "quasar build -m electron",
     "test:unit:ui": "vitest --ui",
     "test:unit": "vitest",
     "test:unit:ci": "vitest run",
@@ -21,6 +22,7 @@
     "test:component:ci": "cross-env NODE_ENV=test cypress run --component"
   },
   "dependencies": {
+    "@electron/remote": "^2.1.2",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
     "pinia": "^2.0.11",
@@ -43,7 +45,8 @@
     "concurrently": "^8.2.2",
     "cypress": "^13.6.6",
     "dotenv": "^16.4.5",
-    "electron": "^30.0.0",
+    "electron": "^31.0.1",
+    "electron-builder": "^24.13.3",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-cypress": "^2.15.1",

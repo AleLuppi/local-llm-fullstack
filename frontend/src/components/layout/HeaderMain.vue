@@ -1,49 +1,35 @@
 <template>
-  <q-header v-bind="$props" v-model="modelValue">
-    <q-toolbar>
-      <q-btn
-        v-if="leftDrawerOpen != undefined"
-        flat
-        dense
-        round
-        icon="menu"
-        aria-label="Menu"
-        @click="leftDrawerOpen = !leftDrawerOpen"
-      />
-
-      <q-toolbar-title>{{ appName }}</q-toolbar-title>
-
-      <div>v{{ appVersion }}</div>
-
-      <q-btn
-        v-if="rightDrawerOpen != undefined"
-        flat
-        dense
-        round
-        icon="menu"
-        aria-label="Menu"
-        @click="rightDrawerOpen = !rightDrawerOpen"
-      />
-    </q-toolbar>
+  <q-header
+    v-bind="$props"
+    v-model="modelValue"
+    :class="bgColor ? `bg-${bgColor}` : ''"
+  >
+    <bar-windowed
+      v-if="showWindowBar"
+      :class="barColor ? `bg-${barColor}` : ''"
+    />
   </q-header>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { QHeaderProps } from 'quasar';
+import BarWindowed from 'components/layout/BarWindowed.vue';
 
 // Define props
-withDefaults(defineProps<QHeaderProps>(), {});
+defineProps<
+  QHeaderProps & {
+    // header background color
+    bgColor?: string;
+
+    // color of the main utility bar
+    barColor?: string;
+  }
+>();
 
 // Define model
 const modelValue = defineModel<QHeaderProps['modelValue']>({ default: true });
-const leftDrawerOpen = defineModel<boolean>('leftDrawerOpen', {
-  default: undefined,
-});
-const rightDrawerOpen = defineModel<boolean>('rightDrawerOpen', {
-  default: undefined,
-});
 
-// Get app name and version
-const appName = import.meta.env.VITE_APP_NAME;
-const appVersion = import.meta.env.VITE_APP_VERSION;
+// Should display utility bar
+const showWindowBar = computed(() => process.env.MODE === 'electron');
 </script>

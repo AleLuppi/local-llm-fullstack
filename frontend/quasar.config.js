@@ -32,7 +32,7 @@ module.exports = configure(function (/* ctx */) {
     boot: ['axios', 'i18n', 'navigationGuards', 'registerComponents'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: ['app.scss', 'glass.scss'],
+    css: ['app.scss', 'glass.scss', 'palette.scss'],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
@@ -207,7 +207,30 @@ module.exports = configure(function (/* ctx */) {
 
         appId: 'local-llm-frontend',
 
-        extraResources: {},
+        extraFiles: [
+          {
+            from: path.resolve(
+              __dirname,
+              '..',
+              'backend',
+              'dist',
+              process.env.APP_API_NAME,
+            ),
+            to: process.env.APP_SERVER_LOCAL_PATH ?? 'server',
+          },
+        ],
+
+        extraResources: [
+          { from: path.resolve(__dirname, 'src-electron', 'splash.html') },
+          {
+            from: path.resolve(__dirname, 'src-electron', 'assets'),
+            to: 'assets',
+          },
+        ],
+
+        nsis: {
+          preCompressedFileExtensions: ['.gguf'],
+        },
       },
     },
 

@@ -4,8 +4,17 @@ export default {
     name: 'English (United States)',
   },
 
+  // App utility
+  app: {
+    apiVersion: 'API v',
+  },
+
   // LLM chat-related
   chat: {
+    agent: {
+      connected: 'LLM agent ready',
+      disconnected: 'Connecting to agent...',
+    },
     history: {
       title: 'Your chat history',
       chatFromDate: 'Chat from ',

@@ -1,0 +1,33 @@
+// Extend Quasar palette with custom colors
+
+.border-primary {
+  border-color: $primary !important;
+}
+
+.text-primary-light {
+  color: $primary-light !important;
+}
+
+.bg-primary-light {
+  background: $primary-light !important;
+}
+
+.border-primary-light {
+  border-color: $primary-light !important;
+}
+
+.text-primary-dark {
+  color: $primary-dark !important;
+}
+
+.bg-primary-dark {
+  background: $primary-dark !important;
+}
+
+.border-primary-dark {
+  border-color: $primary-dark !important;
+}
+
+.border-grey {
+  border-color: $grey !important;
+}
