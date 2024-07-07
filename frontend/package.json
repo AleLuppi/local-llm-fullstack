@@ -1,6 +1,6 @@
 {
   "name": "local-llm-frontend",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Frontend part of local LLM for chatting",
   "productName": "Local LLM frontend",
   "author": "Alessandro Luppi",
