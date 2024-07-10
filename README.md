@@ -22,3 +22,13 @@ Build and chat with a local (private) LLM. Or just use this as a starting point 
   - with [**Uvicorn**](https://www.uvicorn.org/) as ASGI web server
 - [**TinyDB**](https://tinydb.readthedocs.io/) as basic local document-oriented DB.
 - [**PyInstaller**](https://pyinstaller.org/) to bundle Python application.
+
+## Roadmap
+
+- [x] Build installable desktop application to chat with LLM.
+- [x] Support multiple multi-message chats.
+- [ ] Stream answer from LLM.
+- [ ] Write tests to cover the whole application.
+- [ ] Implement CI/CD pipeline to auto-release installable package.
+- [ ] Simplify switching LLM model.
+- [ ] _... to be defined ..._
