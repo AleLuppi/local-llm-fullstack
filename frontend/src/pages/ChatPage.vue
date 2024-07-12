@@ -108,8 +108,4 @@ function onSubmit(message: string) {
   position: sticky;
   bottom: 0;
 }
-
-.input-chat:deep(textarea) {
-  max-height: min(20vh, 500px, 20em);
-}
 </style>

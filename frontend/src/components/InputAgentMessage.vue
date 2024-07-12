@@ -113,3 +113,9 @@ function onSubmit() {
   if (!props.preserveOnSubmit) modelValue.value = '';
 }
 </script>
+
+<style scoped lang="scss">
+.input-chat:deep(textarea) {
+  max-height: min(20vh, 500px, 20em);
+}
+</style>
