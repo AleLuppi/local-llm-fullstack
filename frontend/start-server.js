@@ -9,9 +9,9 @@ const PATH_TO_PYTHON = undefined;
 
 /***********************************************************************************/
 
-const fs = require('fs');
-const path = require('path');
-const { spawn } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { spawn } from 'child_process';
 
 // Move to backend folder
 process.chdir('..\\backend');
@@ -28,8 +28,7 @@ if (pythonPath == undefined) {
     if (fs.existsSync('venv\\Scripts\\' + pythonFileName))
       pythonPath = 'venv\\Scripts\\' + pythonFileName;
   } else {
-    if (fs.existsSync('venv/bin/' + pythonFileName))
-      pythonPath = 'venv/bin/' + pythonFileName;
+    if (fs.existsSync('venv/bin/' + pythonFileName)) pythonPath = 'venv/bin/' + pythonFileName;
   }
 
   // If not found yet, search in current folder

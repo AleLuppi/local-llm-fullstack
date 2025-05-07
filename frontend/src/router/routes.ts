@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 // Import layouts
 const MainLayout = () => import('layouts/MainLayout.vue');

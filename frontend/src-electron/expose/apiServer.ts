@@ -9,7 +9,7 @@ export default {
    *
    * @returns {ChildProcess} The server process.
    */
-  async start(): Promise<ChildProcess> {
+  start(): ChildProcess {
     serverProcess = spawn(
       path.resolve(
         process.env.APP_SERVER_LOCAL_PATH ?? 'server',
@@ -25,7 +25,7 @@ export default {
    *
    * @returns {boolean} True if server was successfully killed.
    */
-  async stop(): Promise<boolean> {
+  stop(): boolean {
     const killed = serverProcess?.kill() ?? false;
     serverProcess = undefined;
     return killed;
@@ -37,10 +37,10 @@ export default {
    * @returns {ChildProcess} The server process.
    */
   async restart(): Promise<ChildProcess> {
-    await this.stop();
+    this.stop();
     return new Promise((resolve) => {
-      setTimeout(async () => {
-        resolve(await this.start());
+      setTimeout(() => {
+        resolve(this.start());
       }, 2500);
     });
   },

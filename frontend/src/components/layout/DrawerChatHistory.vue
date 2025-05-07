@@ -12,12 +12,7 @@
       <div class="row justify-between q-pa-sm">
         <a-btn-dark size="sm" outline outline-color="grey" />
 
-        <a-btn
-          size="sm"
-          :label="$t('locale.name')"
-          outline
-          outline-color="grey"
-        />
+        <a-btn size="sm" :label="$t('locale.name')" outline outline-color="grey" />
       </div>
     </div>
   </q-drawer>
@@ -30,12 +25,11 @@ import { storeToRefs } from 'pinia';
 import { useChatHistoryStore } from 'src/stores/chatHistoryStore';
 
 // Import components
-const ListChatHistory = defineAsyncComponent(
-  () => import('src/components/ListChatHistory.vue'),
-);
+const ListChatHistory = defineAsyncComponent(() => import('src/components/ListChatHistory.vue'));
 
 // Define props
-withDefaults(defineProps<QDrawerProps>(), { dark: undefined });
+// eslint-disable-next-line vue/prop-name-casing
+withDefaults(defineProps<Omit<QDrawerProps, 'modelValue'>>(), { dark: undefined });
 
 // Define model
 const modelValue = defineModel<QDrawerProps['modelValue']>({

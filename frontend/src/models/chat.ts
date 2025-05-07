@@ -1,8 +1,4 @@
-import {
-  ChatRole,
-  type ChatProps,
-  type ChatMessageProps,
-} from './chatInterface';
+import { ChatRole, type ChatProps, type ChatMessageProps } from './chatInterface';
 export { ChatRole };
 
 export class ChatMessage implements ChatMessageProps {
@@ -11,7 +7,7 @@ export class ChatMessage implements ChatMessageProps {
   date?: Date;
 
   constructor(props: ChatMessageProps) {
-    this.role = props.role as ChatRole;
+    this.role = props.role;
     this.content = props.content;
     this.date = props.date ? new Date(props.date) : new Date();
   }
@@ -25,8 +21,7 @@ export class Chat implements ChatProps {
 
   get lastMessage(): ChatMessage | undefined {
     return [...this.messages].sort(
-      (a, b) =>
-        (b.date ?? new Date(0)).getTime() - (a.date ?? new Date(0)).getTime(),
+      (a, b) => (b.date ?? new Date(0)).getTime() - (a.date ?? new Date(0)).getTime(),
     )[this.messages.length - 1];
   }
 
@@ -42,9 +37,7 @@ export class Chat implements ChatProps {
     this.uid = props.uid;
     this.messages = props.messages.map((message) => new ChatMessage(message));
     this.summary = props.summary;
-    this.creationDate = props.creationDate
-      ? new Date(props.creationDate)
-      : new Date();
+    this.creationDate = props.creationDate ? new Date(props.creationDate) : new Date();
   }
 
   /**

@@ -1,4 +1,4 @@
-import * as baseComponents from '.';
+import type * as baseComponents from '.';
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
@@ -16,5 +16,5 @@ export interface ABtnProps extends QBtnProps {
   outlineColor?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ABtnDarkProps extends Omit<ABtnProps, 'icon'> {}

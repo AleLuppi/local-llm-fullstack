@@ -1,13 +1,6 @@
 <template>
-  <q-header
-    v-bind="$props"
-    v-model="modelValue"
-    :class="bgColor ? `bg-${bgColor}` : ''"
-  >
-    <bar-windowed
-      v-if="showWindowBar"
-      :class="barColor ? `bg-${barColor}` : ''"
-    />
+  <q-header v-bind="$props" v-model="modelValue" :class="bgColor ? `bg-${bgColor}` : ''">
+    <bar-windowed v-if="showWindowBar" :class="barColor ? `bg-${barColor}` : ''" />
   </q-header>
 </template>
 
@@ -18,7 +11,7 @@ import BarWindowed from 'components/layout/BarWindowed.vue';
 
 // Define props
 defineProps<
-  QHeaderProps & {
+  Omit<QHeaderProps, 'modelValue'> & {
     // header background color
     bgColor?: string;
 
